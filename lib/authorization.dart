@@ -20,7 +20,7 @@ class MyApp extends State<Authorization> {
       title: 'Авторизации',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        backgroundColor: Colors.blueAccent,
+        primarySwatch: Colors.blueGrey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),
@@ -39,8 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _userNameSignIn = TextEditingController();
   TextEditingController _passwordSignIn = TextEditingController();
-  TextEditingController _userNameSignUp = TextEditingController();
-  TextEditingController _passwordSignUp = TextEditingController();
   bool isObscure = true;
 
   @override
@@ -59,26 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return value!.isNotEmpty && !regex.hasMatch(value)
           ? 'Адрес электронной почты неверного формата!'
           : null;
-    }
-
-//функция регистрации
-    void signUpEmailPassword() async {
-      try {
-        //создание пользоватля по почте и паролю
-        final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _userNameSignUp.text, password: _passwordSignUp.text);
-        // всплывающие сообщения об успешной регистрации
-        const snackBar = SnackBar(
-          content: Text('Успешная регистрация'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } //при ошибке не создает пользоватлея и выводит смс о неправильнстии ввода данных
-      on FirebaseAuthException catch (e) {
-        const snackBar = SnackBar(
-          content: Text('Данные введены неверно!'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
     }
 
 //функция авторизации
@@ -125,208 +103,81 @@ class _MyHomePageState extends State<MyHomePage> {
 //оформление страницы
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(color: Colors.blueAccent),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <
-                  Widget>[
-            SizedBox(height: 20.0),
-            const Text('Авторизация',
-                textAlign: TextAlign.center, style: TextStyle(fontSize: 22)),
-            DefaultTabController(
-                length: 2,
-                initialIndex: 0,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
-                        //Интерфейс навигации основан на всплывающие элементы и вкладки
-                        child: const TabBar(
-                          labelColor: Colors.white,
-                          unselectedLabelColor: Colors.black,
-                          tabs: [
-                            Tab(text: "Регистрация"),
-                            Tab(text: "Авторизация"),
-                          ],
-                        ),
-                      ),
-                      Container(
-                          height: 700, //height of TabBarView
-                          decoration: const BoxDecoration(
-                              border: Border(
-                                  top: BorderSide(
-                                      color: Colors.grey, width: 0.5))),
-                          //содержкание вкладок
-                          child: TabBarView(children: <Widget>[
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 5),
-                                    child: Text("Регистрация",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 16),
-                                    child: TextFormField(
-                                      controller: _userNameSignUp,
-                                      autovalidateMode: AutovalidateMode.always,
-                                      validator: validateEmail,
-                                      decoration: const InputDecoration(
-                                        border: UnderlineInputBorder(),
-                                        labelText: 'Введите электронную почту',
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 16),
-                                    child: TextFormField(
-                                      obscureText: true,
-                                      controller: _passwordSignUp,
-                                      decoration: const InputDecoration(
-                                        border: UnderlineInputBorder(),
-                                        labelText: 'Введите пароль',
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 50.0,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 25, right: 25),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          signUpEmailPassword();
-                                        },
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.white),
-                                        ),
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: const [
-                                              Text("Регистрация",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black)),
-                                            ]),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 5),
-                                      child: Text("Авторизация",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      child: TextFormField(
-                                        controller: _userNameSignIn,
-                                        autovalidateMode:
-                                            AutovalidateMode.always,
-                                        validator: validateEmail,
-                                        decoration: const InputDecoration(
-                                          border: UnderlineInputBorder(),
-                                          labelText:
-                                              'Введите электронную почту',
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 16),
-                                      child: TextFormField(
-                                        controller: _passwordSignIn,
-                                        obscureText: true,
-                                        decoration: const InputDecoration(
-                                          border: UnderlineInputBorder(),
-                                          labelText: 'Введите пароль',
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 50.0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 25, right: 25),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            signInEmailPassword();
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.white),
-                                          ),
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Text("Вход в систему",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.black)),
-                                              ]),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 50.0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 25, right: 25),
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            signInAnonimous();
-                                          },
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.indigo),
-                                          ),
-                                          child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Text("Вход в систему(аноним)",
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.black)),
-                                              ]),
-                                        ),
-                                      ),
-                                    ),
-                                  ]),
-                            ),
-                          ]))
-                    ])),
-          ]),
-        ),
+        child: Column(children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Text("Авторизация",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              controller: _userNameSignIn,
+              autovalidateMode: AutovalidateMode.always,
+              validator: validateEmail,
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Введите электронную почту',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              controller: _passwordSignIn,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Введите пароль',
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: ElevatedButton(
+                onPressed: () {
+                  signInEmailPassword();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey),
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text("Авторизация",
+                          style: TextStyle(fontSize: 14, color: Colors.black)),
+                    ]),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: ElevatedButton(
+                onPressed: () {
+                  signInAnonimous();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text("Вход в систему(аноним)",
+                          style: TextStyle(fontSize: 14, color: Colors.white)),
+                    ]),
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }

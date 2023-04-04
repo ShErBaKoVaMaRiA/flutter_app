@@ -1,32 +1,28 @@
-import 'package:universal_html/html.dart' as unhtml;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'dart:io';
-
 import 'package:path/path.dart';
 
-class EmailAuth extends StatefulWidget {
-  const EmailAuth({Key? key}) : super(key: key);
+class Registration extends StatefulWidget {
+  const Registration({Key? key}) : super(key: key);
 
   @override
-  State<EmailAuth> createState() => MyApp();
+  State<Registration> createState() => MyApp();
 }
 
 String email = '';
 
-class MyApp extends State<EmailAuth> {
+class MyApp extends State<Registration> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '',
+      title: 'Регистрация',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        backgroundColor: Colors.blueAccent,
+        primarySwatch: Colors.blueGrey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),
@@ -41,18 +37,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
-  void initState() {
-    setState(() {
-      email = unhtml.window.location.href
-          .substring(36, unhtml.window.location.href.length);
-    });
-  }
-
   GlobalKey<FormState> _key = GlobalKey();
   //При изменении ввода в текстовом поле связанный объект TextEditingController уведомляет слушателей об изменении, и хранит соотвествующие данные
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _userNameSingIn = TextEditingController();
-  TextEditingController _passwordSingIn = TextEditingController();
   TextEditingController _userNameSingUp = TextEditingController();
   TextEditingController _passwordSingUp = TextEditingController();
   bool isObscure = true;
@@ -75,12 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
           : null;
     }
 
-    void searchEmail() async {
-      String address = unhtml.window.location.href
-          .substring(36, unhtml.window.location.href.length);
-      print(address);
-    }
-
 //функция регистрации
     void signUpEmailPassword() async {
       try {
@@ -101,41 +82,159 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-//функция авторизации
-    void signInEmailPassword() async {
-      try {
-        //авторизация пользоватля по почте и паролю
-        final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: _userNameSingIn.text, password: _passwordSingIn.text);
-        print(user.user?.email);
-        print(user.user?.uid);
-        const snackBar = SnackBar(
-          content: Text('Авторизация прошла успешно!'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } //при ошибке не авторизирует пользоватлея и выводит смс о неправильнстии ввода данных
-      on FirebaseAuthException catch (e) {
-        const snackBar = SnackBar(
-          content: Text('Данные введены неверно!'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    }
-
+//оформление страницы
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(color: Colors.blueAccent),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(height: 20.0),
-                Text('Успешная авторизация пользователя $email по Email',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 22)),
-              ]),
-        ),
+        child: Column(children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Text("Регистрация",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 40, 33, 33),
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              controller: _userNameSingUp,
+              autovalidateMode: AutovalidateMode.always,
+              validator: validateEmail,
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Введите электронную почту',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              controller: _passwordSingUp,
+              obscureText: true,
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Введите пароль',
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 50.0,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: ElevatedButton(
+                onPressed: () {
+                  signUpEmailPassword();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey),
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text("Регистрация",
+                          style: TextStyle(fontSize: 14, color: Colors.black)),
+                    ]),
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }
 }
+    //оформление страницы
+//     return Scaffold(
+//         body: SingleChildScrollView(
+//             child: Container(
+//                 decoration: const BoxDecoration(color: Colors.blueAccent),
+//                 child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.stretch,
+//                     children: <Widget>[
+//                       SizedBox(height: 20.0),
+//                       const Text('Регистрация',
+//                           textAlign: TextAlign.center,
+//                           style: TextStyle(fontSize: 22)),
+//                       DefaultTabController(
+//                           length: 2,
+//                           initialIndex: 0,
+//                           child: Column(
+//                               crossAxisAlignment: CrossAxisAlignment.stretch,
+//                               children: <Widget>[
+//                                 Container(
+//                                   child: Column(
+//                                       crossAxisAlignment:
+//                                           CrossAxisAlignment.start,
+//                                       mainAxisSize: MainAxisSize.min,
+//                                       children: <Widget>[
+//                                         const Padding(
+//                                           padding: EdgeInsets.only(top: 5),
+//                                           child: Text("Регистрация",
+//                                               textAlign: TextAlign.center,
+//                                               style: TextStyle(
+//                                                 color: Colors.white,
+//                                                 fontSize: 32,
+//                                                 fontWeight: FontWeight.bold,
+//                                               )),
+//                                         ),
+//                                         Padding(
+//                                           padding: const EdgeInsets.symmetric(
+//                                               horizontal: 8, vertical: 16),
+//                                           child: TextFormField(
+//                                             controller: _userNameSingUp,
+//                                             autovalidateMode:
+//                                                 AutovalidateMode.always,
+//                                             validator: validateEmail,
+//                                             decoration: const InputDecoration(
+//                                               border: UnderlineInputBorder(),
+//                                               labelText:
+//                                                   'Введите электронную почту',
+//                                             ),
+//                                           ),
+//                                         ),
+//                                         Padding(
+//                                           padding: const EdgeInsets.symmetric(
+//                                               horizontal: 8, vertical: 16),
+//                                           child: TextFormField(
+//                                             controller: _passwordSingUp,
+//                                             obscureText: true,
+//                                             decoration: const InputDecoration(
+//                                               border: UnderlineInputBorder(),
+//                                               labelText: 'Введите пароль',
+//                                             ),
+//                                           ),
+//                                         ),
+//                                         SizedBox(
+//                                           height: 50.0,
+//                                           child: Padding(
+//                                             padding: const EdgeInsets.only(
+//                                                 left: 25, right: 25),
+//                                             child: ElevatedButton(
+//                                               onPressed: () {
+//                                                 signUpEmailPassword();
+//                                               },
+//                                               style: ButtonStyle(
+//                                                 backgroundColor:
+//                                                     MaterialStateProperty.all(
+//                                                         Colors.white),
+//                                               ),
+//                                               child: Row(
+//                                                   mainAxisAlignment:
+//                                                       MainAxisAlignment.center,
+//                                                   children: const [
+//                                                     Text("Вход в систему",
+//                                                         style: TextStyle(
+//                                                             fontSize: 14,
+//                                                             color:
+//                                                                 Colors.black)),
+//                                                   ]),
+//                                             ),
+//                                           ),
+//                                         ),
+//                                       ]),
+//                                 ),
+//                               ]))
+//                     ]))));
+//   }
+// }
