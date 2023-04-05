@@ -41,6 +41,8 @@ dependencies:
   firebase_auth: ^4.4.0
   window_location_href: any
   universal_html: ^1.2.1
+  cloud_firestore: ^4.5.0
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:

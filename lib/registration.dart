@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:path/path.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class Registration extends StatefulWidget {
   State<Registration> createState() => MyApp();
 }
 
+final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 String email = '';
 
 class MyApp extends State<Registration> {
@@ -68,6 +70,16 @@ class _MyHomePageState extends State<MyHomePage> {
         //создание пользоватля по почте и паролю
         final user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: _userNameSingUp.text, password: _passwordSingUp.text);
+        final userDBAdd = fireStore.collection('users');
+        userDBAdd
+            .add(
+              {
+                'name': _userNameSingUp.text,
+                'password': _passwordSingUp.text,
+              },
+            )
+            .then((value) => print('Пользователь добавлен'))
+            .catchError((error) => print('Ошибка - $error'));
         // всплывающие сообщения об успешной регистрации
         const snackBar = SnackBar(
           content: Text('Успешная регистрация'),

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:path/path.dart';
+import 'package:flutter_app/menu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //класс авторизации
 class Authorization extends StatefulWidget {
@@ -12,6 +14,8 @@ class Authorization extends StatefulWidget {
   @override
   State<Authorization> createState() => MyApp();
 }
+
+SharedPreferences? sharedPreferences = null;
 
 class MyApp extends State<Authorization> {
   @override
@@ -61,16 +65,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
 //функция авторизации
     void signInEmailPassword() async {
+      sharedPreferences = await SharedPreferences.getInstance();
       try {
         //авторизация пользоватля по почте и паролю
         final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: _userNameSignIn.text, password: _passwordSignIn.text);
         print(user.user?.email);
         print(user.user?.uid);
+        sharedPreferences!.setString('users', _userNameSignIn.text);
+        print(sharedPreferences!.getString('users'));
         const snackBar = SnackBar(
           content: Text('Авторизация прошла успешно!'),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Menu()));
       } //при ошибке не авторизирует пользоватлея и выводит смс о неправильнстии ввода данных
       on FirebaseAuthException catch (e) {
         const snackBar = SnackBar(
@@ -80,25 +89,25 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-//функция анонимного входа
-    void signInAnonimous() async {
-      try {
-        //авторизация пользоватля анонимно
-        final user = await FirebaseAuth.instance.signInAnonymously();
-        print(user.user?.uid);
-        const snackBar = SnackBar(
-          content: Text('Авторизация под анонимом прошла успешно!'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } //при ошибке не авторизирует пользоватлея и выводит смс об ошибке
-      on FirebaseAuthException catch (e) {
-        print(e);
-        const snackBar = SnackBar(
-          content: Text('Error!'),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    }
+// //функция анонимного входа
+//     void signInAnonimous() async {
+//       try {
+//         //авторизация пользоватля анонимно
+//         final user = await FirebaseAuth.instance.signInAnonymously();
+//         print(user.user?.uid);
+//         const snackBar = SnackBar(
+//           content: Text('Авторизация под анонимом прошла успешно!'),
+//         );
+//         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//       } //при ошибке не авторизирует пользоватлея и выводит смс об ошибке
+//       on FirebaseAuthException catch (e) {
+//         print(e);
+//         const snackBar = SnackBar(
+//           content: Text('Error!'),
+//         );
+//         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+//       }
+//     }
 
 //оформление страницы
     return Scaffold(
@@ -157,26 +166,26 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          SizedBox(
-            height: 50.0,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 25, right: 25),
-              child: ElevatedButton(
-                onPressed: () {
-                  signInAnonimous();
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.indigo),
-                ),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text("Вход в систему(аноним)",
-                          style: TextStyle(fontSize: 14, color: Colors.white)),
-                    ]),
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   height: 50.0,
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(left: 25, right: 25),
+          //     child: ElevatedButton(
+          //       onPressed: () {
+          //         signInAnonimous();
+          //       },
+          //       style: ButtonStyle(
+          //         backgroundColor: MaterialStateProperty.all(Colors.indigo),
+          //       ),
+          //       child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: const [
+          //             Text("Вход в систему(аноним)",
+          //                 style: TextStyle(fontSize: 14, color: Colors.white)),
+          //           ]),
+          //     ),
+          //   ),
+          // ),
         ]),
       ),
     );
