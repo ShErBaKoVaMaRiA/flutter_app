@@ -13,7 +13,7 @@ class AllUsersState extends State<AllUsers> {
   @override
   Widget build(BuildContext context) {
     CollectionReference _collectionRef =
-        FirebaseFirestore.instance.collection('collention');
+        FirebaseFirestore.instance.collection('users');
 
     Future<void> getData() async {
       // Get docs from collection reference
@@ -27,7 +27,7 @@ class AllUsersState extends State<AllUsers> {
     getData();
     Future getDocs() async {
       QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection("collention").get();
+          await FirebaseFirestore.instance.collection("users").get();
       for (int i = 0; i < querySnapshot.docs.length; i++) {
         var a = querySnapshot.docs[i];
         print(a.id);
@@ -37,32 +37,11 @@ class AllUsersState extends State<AllUsers> {
     print("-----------");
     getDocs();
 
-    Future<void> deleteUser() async {
-      // sharedPreferences = await SharedPreferences.getInstance();
-      // await FirebaseStorage.instance.ref("/" + fullname).delete();
-      // if (link != '') {
-      //   querySnapshot = await FirebaseFirestore.instance
-      //       .collection('images')
-      //       .where('url', isEqualTo: link)
-      //       .get();
-      //   fullpath.clear();
-
-      //   querySnapshot?.docs.forEach((doc) async {
-      //     await usersImage.doc(doc.id).delete();
-      //   });
-      // }
-      // initImage();
-    }
-
     getExpenseItems(AsyncSnapshot<QuerySnapshot> snapshot) {
       return snapshot.data!.docs
           .map((doc) => ListTile(
                 title: Text(doc["name"]),
                 subtitle: Text(doc["password"].toString()),
-                leading: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => deleteUser(),
-                ),
               ))
           .toList();
     }
@@ -72,9 +51,8 @@ class AllUsersState extends State<AllUsers> {
       body: Center(
         child: Container(
           child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('collention')
-                  .snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection('users').snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text("There is no expense");

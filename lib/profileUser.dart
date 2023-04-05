@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/registration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_app/main.dart';
+import 'package:flutter_app/main.dart' as main;
+import 'package:flutter_app/authorization.dart';
 
 QuerySnapshot? querySnapshot;
 CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -49,6 +51,18 @@ class ProfileScreenState extends State<ProfileScreen> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+  }
+
+  Future<void> deleteUser() async {
+    querySnapshot?.docs.forEach((doc) {
+      users.doc(doc.id).delete();
+    });
+    final User? user = FirebaseAuth.instance.currentUser;
+    await user?.updatePassword(_newPassword.text);
+    user!
+        .delete()
+        .then((value) => print("Пользоватлеь удалён"))
+        .catchError((error) => print("Ошибка"));
   }
 
   @override
@@ -125,6 +139,37 @@ class ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Text("Изменить данные профиля",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black)),
+                          ]),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 50.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        deleteUser();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Authorization()));
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          )),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("Удалить пользователя",
                                 style: TextStyle(
                                     fontSize: 14, color: Colors.black)),
                           ]),
