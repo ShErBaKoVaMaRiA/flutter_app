@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_app/registration.dart';
 import 'package:flutter_app/authorization.dart';
+import 'package:flutter_app/viewimages.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         home: PageView(children: const [
           Authorization(), //экран 1
           Registration(), //экран 2
+          ViewImages(), //экран 3
         ]));
   }
 }
