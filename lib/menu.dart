@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_app/profileUser.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/userspage.dart';
+import 'package:flutter_app/imagespage.dart' as imagepage;
 
 class Menu extends StatefulWidget {
   const Menu({Key? key}) : super(key: key);
@@ -95,34 +96,30 @@ class _BottomNavigationBarState extends State<Menu> {
             ),
           ),
         ),
+        SizedBox(
+          height: 50.0,
+          child: Padding(
+            padding: EdgeInsets.only(left: 25, right: 25),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const imagepage.MyApp()));
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.grey),
+              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text("Мои картинки",
+                        style: TextStyle(fontSize: 14, color: Colors.black)),
+                  ]),
+            ),
+          ),
+        ),
       ])),
-
-      // drawer: Drawer(
-      //     child: ListView(
-      //   children: <Widget>[
-      //     const DrawerHeader(
-      //       child: Text('Меню'),
-      //     ),
-      //     ListTile(
-      //       title: const Text('Пользователи'),
-      //       onTap: () {},
-      //     ),
-      //     ListTile(
-      //       title: const Text('Профиль'),
-      //       onTap: () {},
-      //     ),
-      //     const Divider(),
-      //     ListTile(
-      //       title: const Text('Выход'),
-      //       onTap: () {},
-      //     ),
-      //     // const Divider(),
-      //     //  ListTile(
-      //     //   title: const Text('картинки'),
-      //     //   onTap: () {},
-      //     // ),
-      //   ],
-      // )),
     );
   }
 }
