@@ -1,16 +1,37 @@
-# flutter_app
+# ПРАКТИЧЕСКАЯ РАБОТА №4
+## «Firestore»
+### Цель работы: реализовать сохранение данных при регистрации пользователя в firestore, редактировать данные пользователя в firestore, реализовать работу с данными CRUD, динамическое обновление данных.
+Ход работы:
+В начале работы необходимо добавить библиотеку cloud_firestore. 
+ ![image](https://user-images.githubusercontent.com/102330085/231024625-26929e22-4fd9-45a3-a555-888e3c5db2ba.png)
 
-A new Flutter project.
+Рисунок 18 – Добавление библиотеки
+Необходимо создать базу FireStore.
+ ![image](https://user-images.githubusercontent.com/102330085/231024618-eb35a907-a718-44ab-80f3-5e482771f5ef.png)
 
-## Getting Started
+Рисунок 19 – Данные пользователей
+Для сохранения данных при регистрации необходимо изменить соответствующую функцию. Изменение реализовано в качестве изменения пароля пользователя в окне профиля с подтверждением. Удаление реализовано путём удаления аккаунта авторизированным пользователем. Динамическое обновление данных реализовано на просмотр всех пользователей в программе. При добавлении нового пользователя автоматически обновляется страница и пользователь появляется в списке. Это реализовано через StreamBuilder.
+ ![image](https://user-images.githubusercontent.com/102330085/231024609-55700597-6553-4bc2-bf83-3068b095f1fa.png)
 
-This project is a starting point for a Flutter application.
+Рисунок 20 – Регистрация пользователя с сохранением данных
+ ![image](https://user-images.githubusercontent.com/102330085/231024594-f81821ea-306d-419b-a026-77e88a17528b.png)
 
-A few resources to get you started if this is your first Flutter project:
+Рисунок 21 – Редактирование и удаление пользователя
+ ![image](https://user-images.githubusercontent.com/102330085/231024582-b8db800a-23d8-4e8d-bce5-7f3f866f7259.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Рисунок 22 – Функция авторизации
+ ![image](https://user-images.githubusercontent.com/102330085/231024573-cf36b92d-b56e-4a73-81a4-71e150aefc0b.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Рисунок 23 – Просмотр пользователей
+Результат выполнения:
+ ![image](https://user-images.githubusercontent.com/102330085/231024563-0804f69b-ac34-47f1-978b-54132ca479b8.png)
+
+Рисунок 24 – Пользователи с динамическим удалением
+ ![image](https://user-images.githubusercontent.com/102330085/231024549-8409abf4-964e-43b8-9f72-0573ead74062.png)
+
+Рисунок 25 – Профиль с изменением и удалением
+ ![image](https://user-images.githubusercontent.com/102330085/231024529-129934ca-37b1-4e0b-aab7-7e6cc92df3de.png)
+
+Рисунок 26 – Меню пользователя
+### Вывод: в результате выполнения данной работы было реализовано сохранение данных при регистрации пользователя в firestore, возможность редактирования данных пользователя в firestore, реализована работа с данными CRUD и динамическое обновление данных.
+ 
